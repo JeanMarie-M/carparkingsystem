@@ -1,6 +1,7 @@
 package com.example.carparkingsystem.ui.theme.screens.login
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -18,8 +19,11 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -56,9 +60,20 @@ fun LoginScreen(
     val context = LocalContext.current
     val authViewModel: AuthViewModel = viewModel()
 
+    val textFieldColors = OutlinedTextFieldDefaults.colors(
+        focusedTextColor = MaterialTheme.colorScheme.onBackground,
+        unfocusedTextColor = MaterialTheme.colorScheme.onBackground,
+        focusedLabelColor = MaterialTheme.colorScheme.primary,
+        unfocusedLabelColor = Color.Gray,
+        cursorColor = MaterialTheme.colorScheme.primary,
+        focusedBorderColor = MaterialTheme.colorScheme.primary,
+        unfocusedBorderColor = Color.LightGray
+    )
+
     Column(
         modifier = modifier
             .fillMaxSize()
+            .background(MaterialTheme.colorScheme.background)
             .padding(horizontal = 32.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center) {
@@ -68,32 +83,37 @@ fun LoginScreen(
             modifier = Modifier
                 .size(140.dp)
                 .clip(CircleShape)
-                .border(2.dp, Color.White))
+                .border(2.dp, MaterialTheme.colorScheme.primary, CircleShape))
+        
+        Spacer(modifier = Modifier.height(16.dp))
+
         Text(
-            text = "Login",
+            text = "Welcome Back",
             fontSize = 32.sp,
             fontWeight = FontWeight.ExtraBold,
-            color = Color.Cyan
+            color = MaterialTheme.colorScheme.primary
         )
 
         Spacer(modifier = Modifier.height(8.dp))
 
         Text(
-            text = "Login our parking community today",
+            text = "Log in to manage your parking",
             fontSize = 16.sp,
             color = Color.Gray
         )
 
-        Spacer(modifier = Modifier.height(16.dp))
+        Spacer(modifier = Modifier.height(32.dp))
 
         OutlinedTextField(
             value = email,
             onValueChange = { email = it },
             label = { Text("Email Address") },
             placeholder = { Text("Enter your email") },
-            leadingIcon = { Icon(Icons.Default.Email, contentDescription = null) },
+            leadingIcon = { Icon(Icons.Default.Email, contentDescription = null, tint = MaterialTheme.colorScheme.primary) },
             modifier = Modifier.fillMaxWidth(),
-            shape = RoundedCornerShape(12.dp)
+            shape = RoundedCornerShape(12.dp),
+            colors = textFieldColors
+
         )
 
         Spacer(modifier = Modifier.height(16.dp))
@@ -103,10 +123,12 @@ fun LoginScreen(
             onValueChange = { password = it },
             label = { Text("Password") },
             placeholder = { Text("Enter your password") },
-            leadingIcon = { Icon(Icons.Default.Lock, contentDescription = null) },
+            leadingIcon = { Icon(Icons.Default.Lock, contentDescription = null, tint = MaterialTheme.colorScheme.primary) },
             visualTransformation = PasswordVisualTransformation(),
             modifier = Modifier.fillMaxWidth(),
-            shape = RoundedCornerShape(12.dp)
+            shape = RoundedCornerShape(12.dp),
+            colors = textFieldColors
+
         )
 
         Spacer(modifier = Modifier.height(32.dp))
@@ -118,21 +140,23 @@ fun LoginScreen(
             modifier = Modifier
                 .fillMaxWidth()
                 .height(56.dp),
-            shape = RoundedCornerShape(12.dp)
+            shape = RoundedCornerShape(12.dp),
+            colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary)
         ) {
             Text(
                 text = "Login",
                 fontSize = 18.sp,
-                fontWeight = FontWeight.Bold
+                fontWeight = FontWeight.Bold,
+                color = Color.White
             )
         }
 
-        Spacer(modifier = Modifier.height(16.dp))
+        Spacer(modifier = Modifier.height(24.dp))
 
         Row {
-            Text(text = "Don't have an account? ")
+            Text(text = "Don't have an account? ", color = MaterialTheme.colorScheme.onBackground)
             Text(text = "Register here",
-                color = Color.Cyan,
+                color = MaterialTheme.colorScheme.secondary,
                 fontWeight = FontWeight.Bold,
                 modifier = Modifier.clickable { navController.navigate(ROUTE_REGISTER) },
             )

@@ -1,5 +1,6 @@
 package com.example.carparkingsystem.ui.theme.screens.dashboard
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -28,6 +29,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.NavigationBarItemDefaults
@@ -40,6 +42,7 @@ import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
@@ -62,8 +65,16 @@ fun Dashboard(NavControler: NavHostController) {
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text(text = "Parking Dashboard", color = Color.White) },
-                colors = TopAppBarDefaults.topAppBarColors(containerColor = Color.Blue),
+                title = { 
+                    Text(
+                        text = "Parking Dashboard", 
+                        fontWeight = FontWeight.ExtraBold,
+                        color = Color.White 
+                    ) 
+                },
+                colors = TopAppBarDefaults.topAppBarColors(
+                    containerColor = MaterialTheme.colorScheme.primary
+                ),
                 actions = {
                     IconButton(onClick = { 
                         authViewModel.logout(NavControler, context)
@@ -79,18 +90,19 @@ fun Dashboard(NavControler: NavHostController) {
         },
 
         bottomBar = {
-            NavigationBar(containerColor = Color.Blue) {
+            NavigationBar(
+                containerColor = MaterialTheme.colorScheme.surface,
+                tonalElevation = 8.dp
+            ) {
                 NavigationBarItem(
                     selected = selectedItem.value == 0,
                     onClick = { selectedItem.value = 0 },
                     icon = { Icon(Icons.Default.Home, null) },
-                    label = { Text(text = "Home", color = Color.White) },
+                    label = { Text(text = "Home") },
                     colors = NavigationBarItemDefaults.colors(
-                        unselectedIconColor = Color.White.copy(0.7f),
-                        unselectedTextColor = Color.White.copy(0.7f),
-                        selectedIconColor = Color.White,
-                        selectedTextColor = Color.White,
-                        indicatorColor = Color.White.copy(0.2f)
+                        selectedIconColor = MaterialTheme.colorScheme.primary,
+                        selectedTextColor = MaterialTheme.colorScheme.primary,
+                        indicatorColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.1f)
                     )
                 )
 
@@ -98,13 +110,11 @@ fun Dashboard(NavControler: NavHostController) {
                     selected = selectedItem.value == 1,
                     onClick = { selectedItem.value = 1 },
                     icon = { Icon(Icons.Default.Person, null) },
-                    label = { Text(text = "Profile", color = Color.White) },
+                    label = { Text(text = "Profile") },
                     colors = NavigationBarItemDefaults.colors(
-                        unselectedIconColor = Color.White.copy(0.7f),
-                        unselectedTextColor = Color.White.copy(0.7f),
-                        selectedIconColor = Color.White,
-                        selectedTextColor = Color.White,
-                        indicatorColor = Color.White.copy(0.2f)
+                        selectedIconColor = MaterialTheme.colorScheme.primary,
+                        selectedTextColor = MaterialTheme.colorScheme.primary,
+                        indicatorColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.1f)
                     )
                 )
 
@@ -112,13 +122,11 @@ fun Dashboard(NavControler: NavHostController) {
                     selected = selectedItem.value == 2,
                     onClick = { selectedItem.value = 2 },
                     icon = { Icon(Icons.Default.Settings, null) },
-                    label = { Text(text = "Settings", color = Color.White) },
+                    label = { Text(text = "Settings") },
                     colors = NavigationBarItemDefaults.colors(
-                        unselectedIconColor = Color.White.copy(0.7f),
-                        unselectedTextColor = Color.White.copy(0.7f),
-                        selectedIconColor = Color.White,
-                        selectedTextColor = Color.White,
-                        indicatorColor = Color.White.copy(0.2f)
+                        selectedIconColor = MaterialTheme.colorScheme.primary,
+                        selectedTextColor = MaterialTheme.colorScheme.primary,
+                        indicatorColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.1f)
                     )
                 )
             }
@@ -128,52 +136,73 @@ fun Dashboard(NavControler: NavHostController) {
         Column(
             modifier = Modifier
                 .fillMaxSize()
+                .background(MaterialTheme.colorScheme.background)
                 .padding(padding)
                 .verticalScroll(scrollState)
         ) {
+            Spacer(modifier = Modifier.height(16.dp))
+            
             Text(
-                text = "Smart Parking System",
-                fontSize = 26.sp,
-                fontWeight = FontWeight.Bold,
-                color = Color.Black,
-                modifier = Modifier.padding(16.dp)
+                text = "Hello, Manager!",
+                fontSize = 28.sp,
+                fontWeight = FontWeight.ExtraBold,
+                color = MaterialTheme.colorScheme.onBackground,
+                modifier = Modifier.padding(horizontal = 20.dp)
+            )
+            
+            Text(
+                text = "Here's your parking overview",
+                fontSize = 14.sp,
+                color = Color.Gray,
+                modifier = Modifier.padding(horizontal = 20.dp)
             )
 
-            // Status Card
+            Spacer(modifier = Modifier.height(24.dp))
+
+            // Status Card with Gradient
             Card(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = 16.dp),
-                shape = RoundedCornerShape(20.dp),
-                colors = CardDefaults.cardColors(
-                    containerColor = Color.Blue,
-                ),
-                elevation = CardDefaults.cardElevation(8.dp)
+                    .padding(horizontal = 20.dp),
+                shape = RoundedCornerShape(24.dp),
+                elevation = CardDefaults.cardElevation(12.dp)
             ) {
-                Row(
+                Column(
                     modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(24.dp),
-                    horizontalArrangement = Arrangement.SpaceAround
+                        .background(
+                            Brush.linearGradient(
+                                colors = listOf(MaterialTheme.colorScheme.primary, MaterialTheme.colorScheme.tertiary)
+                            )
+                        )
+                        .padding(24.dp)
                 ) {
-                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                        Text(text = "Available", fontSize = 16.sp, color = Color.LightGray)
-                        Text(text = "18 Slots", fontSize = 24.sp, fontWeight = FontWeight.Bold, color = Color.White)
-                    }
-                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                        Text(text = "Occupied", fontSize = 16.sp, color = Color.LightGray)
-                        Text(text = "32 Slots", fontSize = 24.sp, fontWeight = FontWeight.Bold, color = Color.White)
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceAround
+                    ) {
+                        StatusColumn("Available", "18", "Slots")
+                        StatusColumn("Occupied", "32", "Slots")
                     }
                 }
             }
 
-            Spacer(modifier = Modifier.height(24.dp))
+            Spacer(modifier = Modifier.height(32.dp))
 
-            // Grid of Actions
+            Text(
+                text = "Quick Actions",
+                fontSize = 20.sp,
+                fontWeight = FontWeight.Bold,
+                color = MaterialTheme.colorScheme.onBackground,
+                modifier = Modifier.padding(horizontal = 20.dp)
+            )
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            // Modern Grid of Actions
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = 16.dp),
+                    .padding(horizontal = 20.dp),
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
                 Row(
@@ -208,37 +237,50 @@ fun Dashboard(NavControler: NavHostController) {
                 }
             }
 
-            Spacer(modifier = Modifier.height(24.dp))
+            Spacer(modifier = Modifier.height(32.dp))
 
             Text(
-                text = "Recent Activity",
+                text = "Live Activity",
                 fontSize = 20.sp,
                 fontWeight = FontWeight.Bold,
-                color = Color.Black,
-                modifier = Modifier.padding(horizontal = 16.dp)
+                color = MaterialTheme.colorScheme.onBackground,
+                modifier = Modifier.padding(horizontal = 20.dp)
             )
 
-            Spacer(modifier = Modifier.height(8.dp))
+            Spacer(modifier = Modifier.height(12.dp))
 
             // Activity List
             Card(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = 16.dp),
-                shape = RoundedCornerShape(15.dp),
-                colors = CardDefaults.cardColors(containerColor = Color(0xFFF5F5F5)),
+                    .padding(horizontal = 20.dp),
+                shape = RoundedCornerShape(20.dp),
+                colors = CardDefaults.cardColors(
+                    containerColor = MaterialTheme.colorScheme.surface
+                ),
                 elevation = CardDefaults.cardElevation(2.dp)
             ) {
-                Column(modifier = Modifier.padding(8.dp)) {
+                Column(modifier = Modifier.padding(12.dp)) {
                     ActivityItem("Car KBY 123 arrived", "Slot A1", "2 mins ago")
-                    HorizontalDivider(modifier = Modifier.padding(vertical = 8.dp), thickness = 0.5.dp, color = Color.LightGray)
+                    HorizontalDivider(modifier = Modifier.padding(vertical = 12.dp), thickness = 0.5.dp, color = Color.LightGray.copy(alpha = 0.5f))
                     ActivityItem("Car KCC 456 departed", "Slot B5", "15 mins ago")
-                    HorizontalDivider(modifier = Modifier.padding(vertical = 8.dp), thickness = 0.5.dp, color = Color.LightGray)
+                    HorizontalDivider(modifier = Modifier.padding(vertical = 12.dp), thickness = 0.5.dp, color = Color.LightGray.copy(alpha = 0.5f))
                     ActivityItem("Slot C3 reserved", "User: John Doe", "1 hour ago")
                 }
             }
 
-            Spacer(modifier = Modifier.height(24.dp))
+            Spacer(modifier = Modifier.height(32.dp))
+        }
+    }
+}
+
+@Composable
+fun StatusColumn(label: String, count: String, unit: String) {
+    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+        Text(text = label, fontSize = 14.sp, color = Color.White.copy(alpha = 0.8f))
+        Row(verticalAlignment = Alignment.Bottom) {
+            Text(text = count, fontSize = 32.sp, fontWeight = FontWeight.ExtraBold, color = Color.White)
+            Text(text = " $unit", fontSize = 14.sp, color = Color.White.copy(alpha = 0.8f), modifier = Modifier.padding(bottom = 6.dp))
         }
     }
 }
@@ -253,10 +295,10 @@ fun ActivityItem(title: String, subtitle: String, time: String) {
         verticalAlignment = Alignment.CenterVertically
     ) {
         Column {
-            Text(text = title, fontWeight = FontWeight.SemiBold, fontSize = 16.sp)
+            Text(text = title, fontWeight = FontWeight.Bold, fontSize = 16.sp, color = MaterialTheme.colorScheme.onSurface)
             Text(text = subtitle, color = Color.Gray, fontSize = 14.sp)
         }
-        Text(text = time, color = Color.Blue, fontSize = 12.sp, fontWeight = FontWeight.Medium)
+        Text(text = time, color = MaterialTheme.colorScheme.primary, fontSize = 12.sp, fontWeight = FontWeight.Bold)
     }
 }
 
@@ -264,8 +306,10 @@ fun ActivityItem(title: String, subtitle: String, time: String) {
 fun DashboardItem(title: String, icon: androidx.compose.ui.graphics.vector.ImageVector, modifier: Modifier = Modifier) {
     Card(
         modifier = modifier.aspectRatio(1f),
-        shape = RoundedCornerShape(15.dp),
-        colors = CardDefaults.cardColors(containerColor = Color(0xFFF5F5F5)),
+        shape = RoundedCornerShape(20.dp),
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.surface
+        ),
         elevation = CardDefaults.cardElevation(4.dp)
     ) {
         Column(
@@ -276,15 +320,15 @@ fun DashboardItem(title: String, icon: androidx.compose.ui.graphics.vector.Image
             Icon(
                 imageVector = icon,
                 contentDescription = null,
-                modifier = Modifier.size(40.dp),
-                tint = Color.Blue
+                modifier = Modifier.size(44.dp),
+                tint = MaterialTheme.colorScheme.primary
             )
-            Spacer(modifier = Modifier.height(10.dp))
+            Spacer(modifier = Modifier.height(12.dp))
             Text(
                 text = title,
-                fontSize = 16.sp,
+                fontSize = 15.sp,
                 fontWeight = FontWeight.Bold,
-                color = Color.Black
+                color = MaterialTheme.colorScheme.onSurface
             )
         }
     }

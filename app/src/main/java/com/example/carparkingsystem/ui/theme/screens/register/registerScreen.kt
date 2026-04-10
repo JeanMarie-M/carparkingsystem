@@ -1,6 +1,7 @@
 package com.example.carparkingsystem.ui.theme.screens.register
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -23,7 +24,9 @@ import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Phone
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
@@ -67,18 +70,19 @@ fun RegisterScreen(
     val scrollState = rememberScrollState()
 
     val textFieldColors = OutlinedTextFieldDefaults.colors(
-        focusedTextColor = Color.Black,
-        unfocusedTextColor = Color.Black,
-        focusedLabelColor = Color.Cyan,
-        unfocusedLabelColor = Color.DarkGray,
-        cursorColor = Color.Cyan,
-        focusedBorderColor = Color.Cyan,
+        focusedTextColor = MaterialTheme.colorScheme.onBackground,
+        unfocusedTextColor = MaterialTheme.colorScheme.onBackground,
+        focusedLabelColor = MaterialTheme.colorScheme.primary,
+        unfocusedLabelColor = Color.Gray,
+        cursorColor = MaterialTheme.colorScheme.primary,
+        focusedBorderColor = MaterialTheme.colorScheme.primary,
         unfocusedBorderColor = Color.LightGray
     )
 
     Column(
         modifier = modifier
             .fillMaxSize()
+            .background(MaterialTheme.colorScheme.background)
             .padding(horizontal = 32.dp)
             .verticalScroll(scrollState),
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -92,12 +96,15 @@ fun RegisterScreen(
             modifier = Modifier
                 .size(120.dp)
                 .clip(CircleShape)
-                .border(2.dp, Color.White))
+                .border(2.dp, MaterialTheme.colorScheme.primary, CircleShape))
+        
+        Spacer(modifier = Modifier.height(16.dp))
+
         Text(
             text = "Create Account",
             fontSize = 32.sp,
             fontWeight = FontWeight.ExtraBold,
-            color = Color.Cyan
+            color = MaterialTheme.colorScheme.primary
         )
 
         Spacer(modifier = Modifier.height(8.dp))
@@ -115,7 +122,7 @@ fun RegisterScreen(
             onValueChange = { username = it },
             label = { Text("Username") },
             placeholder = { Text("Enter your username") },
-            leadingIcon = { Icon(Icons.Default.Person, contentDescription = null) },
+            leadingIcon = { Icon(Icons.Default.Person, contentDescription = null, tint = MaterialTheme.colorScheme.primary) },
             modifier = Modifier.fillMaxWidth(),
             shape = RoundedCornerShape(12.dp),
             colors = textFieldColors
@@ -128,7 +135,7 @@ fun RegisterScreen(
             onValueChange = { email = it },
             label = { Text("Email Address") },
             placeholder = { Text("Enter your email") },
-            leadingIcon = { Icon(Icons.Default.Email, contentDescription = null) },
+            leadingIcon = { Icon(Icons.Default.Email, contentDescription = null, tint = MaterialTheme.colorScheme.primary) },
             modifier = Modifier.fillMaxWidth(),
             shape = RoundedCornerShape(12.dp),
             colors = textFieldColors
@@ -141,7 +148,7 @@ fun RegisterScreen(
             onValueChange = { phoneNumber = it },
             label = { Text("Phone Number") },
             placeholder = { Text("Enter your phone number") },
-            leadingIcon = { Icon(Icons.Default.Phone, contentDescription = null) },
+            leadingIcon = { Icon(Icons.Default.Phone, contentDescription = null, tint = MaterialTheme.colorScheme.primary) },
             modifier = Modifier.fillMaxWidth(),
             shape = RoundedCornerShape(12.dp),
             colors = textFieldColors
@@ -154,7 +161,7 @@ fun RegisterScreen(
             onValueChange = { password = it },
             label = { Text("Password") },
             placeholder = { Text("Create a password") },
-            leadingIcon = { Icon(Icons.Default.Lock, contentDescription = null) },
+            leadingIcon = { Icon(Icons.Default.Lock, contentDescription = null, tint = MaterialTheme.colorScheme.primary) },
             visualTransformation = PasswordVisualTransformation(),
             modifier = Modifier.fillMaxWidth(),
             shape = RoundedCornerShape(12.dp),
@@ -168,7 +175,7 @@ fun RegisterScreen(
             onValueChange = { confirmpassword = it },
             label = { Text("Confirm Password") },
             placeholder = { Text("Repeat your password") },
-            leadingIcon = { Icon(Icons.Default.Check, contentDescription = null) },
+            leadingIcon = { Icon(Icons.Default.Check, contentDescription = null, tint = MaterialTheme.colorScheme.primary) },
             visualTransformation = PasswordVisualTransformation(),
             modifier = Modifier.fillMaxWidth(),
             shape = RoundedCornerShape(12.dp),
@@ -192,21 +199,23 @@ fun RegisterScreen(
             modifier = Modifier
                 .fillMaxWidth()
                 .height(56.dp),
-            shape = RoundedCornerShape(12.dp)
+            shape = RoundedCornerShape(12.dp),
+            colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary)
         ) {
             Text(
                 text = "Register",
                 fontSize = 18.sp,
-                fontWeight = FontWeight.Bold
+                fontWeight = FontWeight.Bold,
+                color = Color.White
             )
         }
 
-        Spacer(modifier = Modifier.height(16.dp))
+        Spacer(modifier = Modifier.height(24.dp))
 
         Row {
-            Text(text = "Already Registered? ")
+            Text(text = "Already Registered? ", color = MaterialTheme.colorScheme.onBackground)
             Text(text = "Login here",
-                color = Color.Cyan,
+                color = MaterialTheme.colorScheme.secondary,
                 fontWeight = FontWeight.Bold,
                 modifier = Modifier.clickable { navController.navigate(ROUTE_LOGIN) }
             )
