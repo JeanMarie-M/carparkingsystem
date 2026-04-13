@@ -1,5 +1,8 @@
 package com.example.carparkingsystem.ui.theme.screens.dashboard
 
+import android.net.Uri
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -76,7 +79,7 @@ fun Dashboard(NavControler: NavHostController) {
                     containerColor = MaterialTheme.colorScheme.primary
                 ),
                 actions = {
-                    IconButton(onClick = { 
+                    IconButton(onClick = {
                         authViewModel.logout(NavControler, context)
                     }) {
                         Icon(
