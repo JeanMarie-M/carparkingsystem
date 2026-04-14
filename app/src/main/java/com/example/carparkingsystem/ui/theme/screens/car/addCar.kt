@@ -44,11 +44,16 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import coil.compose.rememberAsyncImagePainter
+import com.example.carparkingsystem.data.AuthViewModel
+import com.example.carparkingsystem.data.CarViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AddCarScreen() {
+fun AddCarScreen(navController: NavController) {
     val imageUri = remember { mutableStateOf<Uri?>(null) }
     val launcher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.GetContent()
@@ -60,6 +65,8 @@ fun AddCarScreen() {
     var vehicle_type by remember { mutableStateOf("") }
     var driver_name by remember { mutableStateOf("") }
     var phone_number by remember { mutableStateOf("") }
+
+    val carViewModel: CarViewModel = viewModel()
 
 
     Scaffold(topBar = { TopAppBar(title = { Text("Add Car Details") },
@@ -158,7 +165,18 @@ fun AddCarScreen() {
             Spacer(modifier = Modifier.height(24.dp))
 
             Button(
-                onClick = {},
+                onClick = {
+                    carViewModel.uploadCar(
+                        imageUri = imageUri.value,
+                        name = plate_number,
+                        plate_number = plate_number,
+                        vehicle_type = vehicle_type,
+                        driver_name = driver_name,
+                        phone_number = phone_number,
+                        context = navController.context,
+                        navController = navController
+                    )
+                },
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(56.dp),
@@ -178,8 +196,9 @@ fun AddCarScreen() {
 
 }
 
+
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
 fun AddCarScreenPreview() {
-    AddCarScreen()
+    AddCarScreen(rememberNavController())
 }

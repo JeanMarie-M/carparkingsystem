@@ -4,6 +4,7 @@ import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -56,6 +57,8 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.example.carparkingsystem.data.AuthViewModel
+import com.example.carparkingsystem.navigation.ROUTE_ADD_CAR
+import com.example.carparkingsystem.navigation.ROUTE_LOGIN
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -215,7 +218,13 @@ fun Dashboard(NavControler: NavHostController) {
                     DashboardItem(
                         title = "Add Car",
                         icon = Icons.Default.Add,
-                        modifier = Modifier.weight(1f)
+                        modifier = Modifier
+                            .weight(1f)
+                            .clickable {
+                                val navController = NavControler
+                                navController.navigate(ROUTE_ADD_CAR)
+                            }
+
                     )
                     DashboardItem(
                         title = "View Cars",
