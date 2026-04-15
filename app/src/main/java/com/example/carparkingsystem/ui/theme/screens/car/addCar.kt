@@ -1,9 +1,13 @@
 package com.example.carparkingsystem.ui.theme.screens.car
 
+import android.icu.util.Calendar
 import android.net.Uri
+import android.os.Build
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -15,6 +19,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AccessTime
+import androidx.compose.material.icons.filled.ColorLens
 import androidx.compose.material.icons.filled.NoteAlt
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Phone
@@ -22,13 +28,16 @@ import androidx.compose.material.icons.filled.Pin
 import androidx.compose.material.icons.filled.TimeToLeave
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.ExposedDropdownMenuDefaults.textFieldColors
+import androidx.compose.material3.ExposedDropdownMenuBox
+import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TimePickerDialog
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
@@ -40,6 +49,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -65,6 +75,9 @@ fun AddCarScreen(navController: NavController) {
     var vehicle_type by remember { mutableStateOf("") }
     var driver_name by remember { mutableStateOf("") }
     var phone_number by remember { mutableStateOf("") }
+    var color by remember { mutableStateOf("") }
+    var entry_time by remember { mutableStateOf("") }
+
 
     val carViewModel: CarViewModel = viewModel()
 
@@ -122,7 +135,7 @@ fun AddCarScreen(navController: NavController) {
                 leadingIcon = { Icon(Icons.Default.Pin, contentDescription = null, tint = MaterialTheme.colorScheme.primary) },
                 modifier = Modifier.fillMaxWidth(),
                 shape = RoundedCornerShape(12.dp),
-                colors = textFieldColors()
+                colors = ExposedDropdownMenuDefaults.textFieldColors()
             )
             Spacer(modifier = Modifier.height(24.dp))
 
@@ -134,7 +147,7 @@ fun AddCarScreen(navController: NavController) {
                 leadingIcon = { Icon(Icons.Default.TimeToLeave, contentDescription = null, tint = MaterialTheme.colorScheme.primary) },
                 modifier = Modifier.fillMaxWidth(),
                 shape = RoundedCornerShape(12.dp),
-                colors = textFieldColors()
+                colors = ExposedDropdownMenuDefaults.textFieldColors()
             )
             Spacer(modifier = Modifier.height(24.dp))
 
@@ -147,7 +160,7 @@ fun AddCarScreen(navController: NavController) {
                 leadingIcon = { Icon(Icons.Default.NoteAlt, contentDescription = null, tint = MaterialTheme.colorScheme.primary) },
                 modifier = Modifier.fillMaxWidth(),
                 shape = RoundedCornerShape(12.dp),
-                colors = textFieldColors()
+                colors = ExposedDropdownMenuDefaults.textFieldColors()
             )
 
             Spacer(modifier = Modifier.height(24.dp))
@@ -160,9 +173,18 @@ fun AddCarScreen(navController: NavController) {
                 leadingIcon = { Icon(Icons.Default.Phone, contentDescription = null, tint = MaterialTheme.colorScheme.primary) },
                 modifier = Modifier.fillMaxWidth(),
                 shape = RoundedCornerShape(12.dp),
-                colors = textFieldColors()
+                colors = ExposedDropdownMenuDefaults.textFieldColors()
             )
             Spacer(modifier = Modifier.height(24.dp))
+
+            VehicleColorDropdown()
+
+            Spacer(modifier = Modifier.height(24.dp))
+
+            TimePickerField()
+
+            Spacer(modifier = Modifier.height(24.dp))
+
 
             Button(
                 onClick = {
@@ -174,7 +196,9 @@ fun AddCarScreen(navController: NavController) {
                         driver_name = driver_name,
                         phone_number = phone_number,
                         context = navController.context,
-                        navController = navController
+                        navController = navController,
+                        color = color,
+                        entry_time = entry_time,
                     )
                 },
                 modifier = Modifier
@@ -201,4 +225,93 @@ fun AddCarScreen(navController: NavController) {
 @Composable
 fun AddCarScreenPreview() {
     AddCarScreen(rememberNavController())
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun TimePickerField() {
+    val context = LocalContext.current
+
+    var selectedTime by remember { mutableStateOf("") }
+
+    val calendar = Calendar.getInstance()
+    val hour = calendar.get(Calendar.HOUR_OF_DAY)
+    val minute = calendar.get(Calendar.MINUTE)
+
+    val timePickerDialog = android.app.TimePickerDialog(
+        context,
+        { _, selectedHour, selectedMinute ->
+            selectedTime = String.format("%02d:%02d", selectedHour, selectedMinute)
+        },
+        hour,
+        minute,
+        true // true = 24-hour format
+    )
+
+    OutlinedTextField(
+        value = selectedTime,
+        onValueChange = {},
+        label = { Text("Select Time") },
+        readOnly = true,
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable {
+                timePickerDialog.show()
+            },
+        shape = RoundedCornerShape(12.dp),
+        leadingIcon = { Icon(Icons.Default.AccessTime, contentDescription = null, tint = MaterialTheme.colorScheme.primary) },
+        colors = ExposedDropdownMenuDefaults.textFieldColors()
+        )
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun VehicleColorDropdown() {
+
+    val colors = listOf(
+        "Black", "White", "Silver", "Gray",
+        "Blue", "Red", "Green", "Yellow",
+        "Orange", "Brown", "Purple", "Pink", "Other"
+    )
+
+    var expanded by remember { mutableStateOf(false) }
+    var selectedColor by remember { mutableStateOf("") }
+
+    ExposedDropdownMenuBox(
+        expanded = expanded,
+        onExpandedChange = { expanded = !expanded }
+    ) {
+
+        OutlinedTextField(
+            value = selectedColor,
+            onValueChange = {},
+            readOnly = true,
+            label = { Text("Vehicle Color") },
+            placeholder = { Text("Select color") },
+            trailingIcon = {
+                ExposedDropdownMenuDefaults.TrailingIcon(expanded)
+            },
+            modifier = Modifier
+                .menuAnchor()
+                .fillMaxWidth(),
+            shape = RoundedCornerShape(12.dp),
+            leadingIcon = { Icon(Icons.Default.ColorLens, contentDescription = null, tint = MaterialTheme.colorScheme.primary) },
+            colors = ExposedDropdownMenuDefaults.textFieldColors()
+        )
+
+        ExposedDropdownMenu(
+            expanded = expanded,
+            onDismissRequest = { expanded = false }
+        ) {
+            colors.forEach { color ->
+                DropdownMenuItem(
+                    text = { Text(color) },
+                    onClick = {
+                        selectedColor = color
+                        expanded = false
+                    }
+                )
+            }
+        }
+    }
 }
