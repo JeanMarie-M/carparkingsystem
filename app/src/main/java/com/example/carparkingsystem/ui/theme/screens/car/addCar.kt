@@ -252,7 +252,7 @@ fun TimePickerField() {
         value = selectedTime,
         onValueChange = {},
         label = { Text("Entry Time") },
-        placeholder = { Text("Select color") },
+        placeholder = { Text("Select Time") },
         readOnly = true,
         modifier = Modifier
             .fillMaxWidth()
