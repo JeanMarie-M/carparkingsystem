@@ -251,7 +251,8 @@ fun TimePickerField() {
     OutlinedTextField(
         value = selectedTime,
         onValueChange = {},
-        label = { Text("Select Time") },
+        label = { Text("Entry Time") },
+        placeholder = { Text("Select color") },
         readOnly = true,
         modifier = Modifier
             .fillMaxWidth()
