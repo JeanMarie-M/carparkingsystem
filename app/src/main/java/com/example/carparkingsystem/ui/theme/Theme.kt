@@ -40,7 +40,7 @@ private val LightColorScheme = lightColorScheme(
 
 @Composable
 fun CarParkingSystemTheme(
-    darkTheme: Boolean = isSystemInDarkTheme(),
+    darkTheme: Boolean = true, // Forced dark theme
     // Dynamic color is disabled to maintain consistency with our custom theme
     dynamicColor: Boolean = false,
     content: @Composable () -> Unit
