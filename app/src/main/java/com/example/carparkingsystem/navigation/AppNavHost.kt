@@ -2,10 +2,13 @@ package com.example.carparkingsystem.navigation
 
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import com.example.carparkingsystem.ui.theme.screens.car.AddCarScreen
+import com.example.carparkingsystem.ui.theme.screens.cars.UpdateCarScreen
 import com.example.carparkingsystem.ui.theme.screens.cars.ViewCarsScreen
 import com.example.carparkingsystem.ui.theme.screens.dashboard.Dashboard
 import com.example.carparkingsystem.ui.theme.screens.login.LoginScreen
@@ -23,5 +26,12 @@ fun AppNavHost(navController: NavHostController = rememberNavController(),
         composable(ROUTE_DASHBOARD){ Dashboard(navController) }
         composable(ROUTE_ADD_CAR){ AddCarScreen(navController) }
         composable(ROUTE_VIEW_CARS){ ViewCarsScreen(navController) }
+        composable(
+            route = ROUTE_UPDATE_CAR + "/{id}",
+            arguments = listOf(navArgument("id") { type = NavType.StringType })
+        ) { backStackEntry ->
+            val id = backStackEntry.arguments?.getString("id")
+            UpdateCarScreen(navController, id ?: "")
+        }
     }
 }

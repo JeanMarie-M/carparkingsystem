@@ -59,6 +59,7 @@ import androidx.navigation.compose.rememberNavController
 import com.example.carparkingsystem.data.AuthViewModel
 import com.example.carparkingsystem.navigation.ROUTE_ADD_CAR
 import com.example.carparkingsystem.navigation.ROUTE_LOGIN
+import com.example.carparkingsystem.navigation.ROUTE_VIEW_CARS
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -229,7 +230,12 @@ fun Dashboard(NavControler: NavHostController) {
                     DashboardItem(
                         title = "View Cars",
                         icon = Icons.Default.DirectionsCar,
-                        modifier = Modifier.weight(1f)
+                        modifier = Modifier
+                            .weight(1f)
+                            .clickable {
+                                val navController = NavControler
+                                navController.navigate(ROUTE_VIEW_CARS)
+                            }
                     )
                 }
                 Row(

@@ -18,7 +18,9 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.DirectionsCar
+import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -38,13 +40,16 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import coil.compose.AsyncImage
 import com.example.carparkingsystem.data.CarViewModel
 import com.example.carparkingsystem.models.CarModel
+import com.example.carparkingsystem.navigation.ROUTE_UPDATE_CAR
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -97,7 +102,11 @@ fun ViewCarsScreen(navController: NavController) {
                     verticalArrangement = Arrangement.spacedBy(16.dp)
                 ) {
                     items(cars) { car ->
-                        CarItem(car)
+                        CarItem(
+                            car = car,
+                            navController = navController,
+                            carViewModel = carViewModel
+                        )
                     }
                 }
             }
@@ -106,7 +115,13 @@ fun ViewCarsScreen(navController: NavController) {
 }
 
 @Composable
-fun CarItem(car: CarModel) {
+fun CarItem(
+    car: CarModel,
+    navController: NavController,
+    carViewModel: CarViewModel
+) {
+    val context = LocalContext.current
+
     Card(
         modifier = Modifier.fillMaxWidth(),
         shape = RoundedCornerShape(16.dp),
@@ -141,7 +156,7 @@ fun CarItem(car: CarModel) {
 
             Spacer(modifier = Modifier.width(16.dp))
 
-            Column {
+            Column(modifier = Modifier.weight(1f)) {
                 Text(
                     text = car.plate_number,
                     fontSize = 20.sp,
@@ -165,6 +180,25 @@ fun CarItem(car: CarModel) {
                     color = MaterialTheme.colorScheme.secondary
                 )
             }
+
+            Column {
+                IconButton(onClick = { 
+                    navController.navigate(ROUTE_UPDATE_CAR + "/${car.id}")
+                }) {
+                    Icon(Icons.Default.Edit, contentDescription = "Edit", tint = MaterialTheme.colorScheme.primary)
+                }
+                IconButton(onClick = { 
+                    carViewModel.deleteCar(car.id, context)
+                }) {
+                    Icon(Icons.Default.Delete, contentDescription = "Delete", tint = Color.Red)
+                }
+            }
         }
     }
+}
+
+@Preview(showBackground = true, showSystemUi = true)
+@Composable
+fun ViewCarsScreenPreview(){
+    ViewCarsScreen(navController = rememberNavController())
 }

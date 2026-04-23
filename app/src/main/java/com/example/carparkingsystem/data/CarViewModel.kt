@@ -119,4 +119,35 @@ class CarViewModel : ViewModel() {
             }
         }
     }
+
+    fun updateCar(
+        id: String,
+        plate_number: String,
+        vehicle_type: String,
+        driver_name: String,
+        phone_number: String,
+        color: String,
+        entry_time: String,
+        context: Context,
+        navController: NavController
+    ) {
+        val ref = FirebaseDatabase.getInstance().getReference("Cars").child(id)
+        val carData = mapOf(
+            "id" to id,
+            "plate_number" to plate_number,
+            "vehicle_type" to vehicle_type,
+            "driver_name" to driver_name,
+            "phone_number" to phone_number,
+            "color" to color,
+            "entry_time" to entry_time
+        )
+        ref.updateChildren(carData).addOnCompleteListener {
+            if (it.isSuccessful) {
+                Toast.makeText(context, "Updated Successfully", Toast.LENGTH_SHORT).show()
+                navController.navigate(ROUTE_DASHBOARD)
+            } else {
+                Toast.makeText(context, "Failed to update", Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
 }
