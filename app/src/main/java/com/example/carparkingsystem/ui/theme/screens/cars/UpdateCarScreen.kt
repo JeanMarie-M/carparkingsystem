@@ -55,6 +55,10 @@ fun UpdateCarScreen(navController: NavController, carId: String) {
     val cars = carViewModel.cars
     val car = cars.find { it.id == carId }
     
+    LaunchedEffect(Unit) {
+        carViewModel.fetchCars(context)
+    }
+    
     LaunchedEffect(car) {
         car?.let {
             plateNumber = it.plate_number
@@ -100,6 +104,7 @@ fun UpdateCarScreen(navController: NavController, carId: String) {
                 value = plateNumber,
                 onValueChange = { plateNumber = it },
                 label = { Text("Plate Number") },
+                placeholder = { Text(car?.plate_number ?: "Enter Plate Number") },
                 modifier = Modifier.fillMaxWidth()
             )
 
@@ -109,6 +114,7 @@ fun UpdateCarScreen(navController: NavController, carId: String) {
                 value = vehicleType,
                 onValueChange = { vehicleType = it },
                 label = { Text("Vehicle Type") },
+                placeholder = { Text(car?.vehicle_type ?: "Enter Vehicle Type") },
                 modifier = Modifier.fillMaxWidth()
             )
 
@@ -118,6 +124,7 @@ fun UpdateCarScreen(navController: NavController, carId: String) {
                 value = driverName,
                 onValueChange = { driverName = it },
                 label = { Text("Driver Name") },
+                placeholder = { Text(car?.driver_name ?: "Enter Driver Name") },
                 modifier = Modifier.fillMaxWidth()
             )
 
@@ -127,6 +134,7 @@ fun UpdateCarScreen(navController: NavController, carId: String) {
                 value = phoneNumber,
                 onValueChange = { phoneNumber = it },
                 label = { Text("Phone Number") },
+                placeholder = { Text(car?.phone_number ?: "Enter Phone Number") },
                 modifier = Modifier.fillMaxWidth()
             )
 
@@ -136,6 +144,7 @@ fun UpdateCarScreen(navController: NavController, carId: String) {
                 value = color,
                 onValueChange = { color = it },
                 label = { Text("Color") },
+                placeholder = { Text(car?.color ?: "Enter Color") },
                 modifier = Modifier.fillMaxWidth()
             )
 
@@ -145,6 +154,7 @@ fun UpdateCarScreen(navController: NavController, carId: String) {
                 value = entryTime,
                 onValueChange = { entryTime = it },
                 label = { Text("Entry Time") },
+                placeholder = { Text(car?.entry_time ?: "Enter Entry Time") },
                 modifier = Modifier.fillMaxWidth()
             )
 

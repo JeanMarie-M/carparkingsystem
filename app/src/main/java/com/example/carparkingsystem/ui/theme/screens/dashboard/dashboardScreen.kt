@@ -1,8 +1,5 @@
 package com.example.carparkingsystem.ui.theme.screens.dashboard
 
-import android.net.Uri
-import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -42,6 +39,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -57,8 +55,8 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.example.carparkingsystem.data.AuthViewModel
+import com.example.carparkingsystem.data.CarViewModel
 import com.example.carparkingsystem.navigation.ROUTE_ADD_CAR
-import com.example.carparkingsystem.navigation.ROUTE_LOGIN
 import com.example.carparkingsystem.navigation.ROUTE_VIEW_CARS
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -67,7 +65,13 @@ fun Dashboard(NavControler: NavHostController) {
     val selectedItem = remember { mutableIntStateOf(0) }
     val scrollState = rememberScrollState()
     val authViewModel: AuthViewModel = viewModel()
+    val carViewModel: CarViewModel = viewModel()
     val context = LocalContext.current
+    val cars = carViewModel.cars
+
+    LaunchedEffect(Unit) {
+        carViewModel.fetchCars(context)
+    }
 
     Scaffold(
         topBar = {
@@ -187,8 +191,8 @@ fun Dashboard(NavControler: NavHostController) {
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.SpaceAround
                     ) {
-                        StatusColumn("Available", "18", "Slots")
-                        StatusColumn("Occupied", "32", "Slots")
+                        StatusColumn("Available", "${50 - cars.size}", "Slots")
+                        StatusColumn("Occupied", "${cars.size}", "Slots")
                     }
                 }
             }
@@ -222,8 +226,7 @@ fun Dashboard(NavControler: NavHostController) {
                         modifier = Modifier
                             .weight(1f)
                             .clickable {
-                                val navController = NavControler
-                                navController.navigate(ROUTE_ADD_CAR)
+                                NavControler.navigate(ROUTE_ADD_CAR)
                             }
 
                     )
@@ -233,8 +236,7 @@ fun Dashboard(NavControler: NavHostController) {
                         modifier = Modifier
                             .weight(1f)
                             .clickable {
-                                val navController = NavControler
-                                navController.navigate(ROUTE_VIEW_CARS)
+                                NavControler.navigate(ROUTE_VIEW_CARS)
                             }
                     )
                 }
@@ -279,11 +281,28 @@ fun Dashboard(NavControler: NavHostController) {
                 elevation = CardDefaults.cardElevation(2.dp)
             ) {
                 Column(modifier = Modifier.padding(12.dp)) {
-                    ActivityItem("Car KBY 123 arrived", "Slot A1", "2 mins ago")
-                    HorizontalDivider(modifier = Modifier.padding(vertical = 12.dp), thickness = 0.5.dp, color = Color.LightGray.copy(alpha = 0.5f))
-                    ActivityItem("Car KCC 456 departed", "Slot B5", "15 mins ago")
-                    HorizontalDivider(modifier = Modifier.padding(vertical = 12.dp), thickness = 0.5.dp, color = Color.LightGray.copy(alpha = 0.5f))
-                    ActivityItem("Slot C3 reserved", "User: John Doe", "1 hour ago")
+                    if (cars.isEmpty()) {
+                        Text(
+                            text = "No recent activity",
+                            modifier = Modifier.padding(16.dp),
+                            color = Color.Gray
+                        )
+                    } else {
+                        cars.takeLast(3).reversed().forEachIndexed { index, car ->
+                            ActivityItem(
+                                title = "Car ${car.plate_number} parked",
+                                subtitle = "Driver: ${car.driver_name}",
+                                time = car.entry_time
+                            )
+                            if (index < 2 && index < cars.size - 1) {
+                                HorizontalDivider(
+                                    modifier = Modifier.padding(vertical = 12.dp),
+                                    thickness = 0.5.dp,
+                                    color = Color.LightGray.copy(alpha = 0.5f)
+                                )
+                            }
+                        }
+                    }
                 }
             }
 
